@@ -1,39 +1,36 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-app.use(
-    cors({
-        origin: "https://demo-job-portal-client-seven.vercel.app",
-        methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
-        credentials: true,
-    })
-);
+const app = express();
 
-app.use(cookieParser(process.env.COOKIE_SECRET));
-
-// Middlewares
-app.use(express.json());
-
-app.options("*", cors({
+// ✅ Define proper CORS options
+const corsOptions = {
     origin: "https://demo-job-portal-client-seven.vercel.app",
     credentials: true,
-}));
+    methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-// Custom Middlewares
-const {
-    authenticateUser,
-} = require("./Middleware/UserAuthenticationMiddleware");
+// ✅ Apply CORS & handle preflight requests
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
-// Routers
+// ✅ Parse cookies and JSON
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(express.json());
+
+// ✅ Custom Middleware
+const { authenticateUser } = require("./Middleware/UserAuthenticationMiddleware");
+
+// ✅ Routers
 const JobRouter = require("./Router/JobRouter");
 const UserRouter = require("./Router/UserRouter");
 const AuthRouter = require("./Router/AuthRouter");
 const AdminRouter = require("./Router/AdminRouter");
 const ApplicationRouter = require("./Router/ApplicationRouter");
 
-// Connecting routes
+// ✅ Route Setup
 app.use("/api/v1/Jobs", authenticateUser, JobRouter);
 app.use("/api/v1/Users", authenticateUser, UserRouter);
 app.use("/api/v1/Auth", AuthRouter);
