@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(
     cors({
         origin: "https://demo-job-portal-client-seven.vercel.app",
-        methods: ["GET,POST,DELETE,PUT,PATCH"],
+        methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
         credentials: true,
     })
 );
