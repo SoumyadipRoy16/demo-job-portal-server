@@ -3,10 +3,6 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-app.use(cookieParser(process.env.COOKIE_SECRET));
-
-// Middlewares
-app.use(express.json());
 app.use(
     cors({
         origin: "https://demo-job-portal-client-seven.vercel.app",
@@ -14,6 +10,16 @@ app.use(
         credentials: true,
     })
 );
+
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+// Middlewares
+app.use(express.json());
+
+app.options("*", cors({
+    origin: "https://demo-job-portal-client-seven.vercel.app",
+    credentials: true,
+}));
 
 // Custom Middlewares
 const {
